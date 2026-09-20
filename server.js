@@ -21,7 +21,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import path from "node:path";
 
-import { root, port, mongoUri } from "./src/config.js";
+import { root, port, mongoUri, corsOrigins } from "./src/config.js";
 import { contentRoot } from "./src/content.js";
 import { connectionAttempt } from "./src/database.js";
 import infoRoutes from "./src/routes/info.js";
@@ -58,6 +58,26 @@ app.use((_, res, next) => {
   res.setHeader("Permissions-Policy", "camera=(), geolocation=(), microphone=(), payment=(), usb=()");
   next();
 });
+/* ---- CORS -----------------------------------------------------
+   The static site (e.g. GitHub Pages) and this API usually live on
+   different origins. The frontend points at the server with apiBase
+   in site-config.js; these headers let the browser accept the calls.
+   Allowed origins come from CORS_ORIGIN in .env (comma-separated).
+   Same-origin requests are untouched and always work. */
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && corsOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-admin-key");
+    res.setHeader("Access-Control-Max-Age", "86400");
+  }
+  res.setHeader("Vary", "Origin");
+  if (req.method === "OPTIONS") return res.status(204).end();
+  next();
+});
+
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: false, limit: "20kb" }));
 

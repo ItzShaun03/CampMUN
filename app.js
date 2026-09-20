@@ -23,6 +23,8 @@
   document.body.prepend(skipLink);
 
   const config = window.CAMPMUN_CONFIG || {};
+  const API_BASE = String(config.apiBase || "").replace(/\/+$/, "");
+  const api = (path) => API_BASE + path;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const clean = (value) => String(value || "").trim();
@@ -96,7 +98,7 @@
     if (featureOn("resources")) {
       (async () => {
         let documents = [];
-        try { const response = await fetch("/api/content"); const data = await readJson(response); if (response.ok && data.ok) documents = data.documents || []; } catch {}
+        try { const response = await fetch(api("/api/content")); const data = await readJson(response); if (response.ok && data.ok) documents = data.documents || []; } catch {}
         documents.forEach((href) => {
           const name = href.split("/").pop().replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
           const card = document.createElement("a");
@@ -125,7 +127,7 @@
     const captions = config.gallery || [];
     (async () => {
       let images = [];
-      try { const response = await fetch("/api/content"); const data = await readJson(response); if (response.ok && data.ok) images = data.images || []; } catch {}
+      try { const response = await fetch(api("/api/content")); const data = await readJson(response); if (response.ok && data.ok) images = data.images || []; } catch {}
       const slots = Array.from({ length: Math.max(captions.length, images.length, 6) }, (_, index) => ({ title: captions[index]?.title || "CampMUN", caption: captions[index]?.caption || "A moment from the conference." }));
       const blocks = [];
       slots.forEach((item, index) => {
@@ -303,7 +305,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(lockedSch
         if (data.get("consent") !== "on") { statusEl.textContent = "Please accept the privacy consent to continue."; statusEl.hidden = false; return; }
         if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = "Sending application…"; }
         try {
-          const response = await fetch("/api/registrations", { method: "POST", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
+          const response = await fetch(api("/api/registrations"), { method: "POST", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
           const result = await readJson(response);
           if (!response.ok || !result.ok) throw new Error(result.message || "We could not send the application.");
           await loadState();
@@ -407,7 +409,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(lockedSch
       $$(".verify-badge[data-application]", applicationPanel).forEach((badge) => {
         const appId = badge.getAttribute("data-application");
         if (!appId) return;
-        fetch(`/api/registrations/${encodeURIComponent(appId)}/verify`, { headers: { Authorization: `Bearer ${getToken()}` } })
+        fetch(api(`/api/registrations/${encodeURIComponent(appId)}/verify`), { headers: { Authorization: `Bearer ${getToken()}` } })
           .then((response) => readJson(response))
           .then((data) => {
             if (!data || data.ok !== true) throw new Error();
@@ -513,7 +515,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
         if (data.get("consent") !== "on") { statusEl.textContent = "Please accept the privacy consent to continue."; statusEl.hidden = false; return; }
         if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = "Saving changes…"; }
         try {
-          const response = await fetch(`/api/registrations/${encodeURIComponent(reg.applicationId)}`, { method: "PUT", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
+          const response = await fetch(api(`/api/registrations/${encodeURIComponent(reg.applicationId)}`), { method: "PUT", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
           const result = await readJson(response);
           if (!response.ok || !result.ok) throw new Error(result.message || "We could not update the application.");
           await loadState();
@@ -533,7 +535,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
     const loadState = async () => {
       if (!account || !featureOn("auth")) { delegateTotal = 1; facultyTotal = 0; registrations = []; return; }
       try {
-        const response = await fetch("/api/registrations/mine", { headers: { Authorization: `Bearer ${getToken()}` } });
+        const response = await fetch(api("/api/registrations/mine"), { headers: { Authorization: `Bearer ${getToken()}` } });
         const data = await readJson(response);
         if (response.ok && data.ok) { delegateTotal = data.delegateTotal || 1; facultyTotal = data.facultyTotal || 0; registrations = data.registrations || []; }
       } catch {}
@@ -581,7 +583,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       };
       const submit = $("#signup-submit", authPanel); submit.disabled = true; submit.innerHTML = "Creating account…";
       try {
-        const response = await fetch("/api/auth/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const response = await fetch(api("/api/auth/signup"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not create your account.");
         setToken(result.token); renderAccount(result.user); toast("Account created. Welcome to CampMUN.");
@@ -594,7 +596,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       if (!validateAuth(loginForm)) return;
       const submit = $("#login-submit", authPanel); submit.disabled = true; submit.innerHTML = "Logging in…";
       try {
-        const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: $("#login-email", authPanel).value, password: $("#login-password", authPanel).value }) });
+        const response = await fetch(api("/api/auth/login"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: $("#login-email", authPanel).value, password: $("#login-password", authPanel).value }) });
         const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not log you in.");
         setToken(result.token); renderAccount(result.user); toast(`Welcome back, ${result.user.name.split(" ")[0]}.`);
@@ -624,7 +626,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       }
       const submit = $("#settings-save", applicationPanel); if (submit) { submit.disabled = true; submit.innerHTML = "Saving…"; }
       try {
-        const response = await fetch("/api/auth/account", { method: "PUT", headers: { "Content-Type": "application/json", ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify(payload) });
+        const response = await fetch(api("/api/auth/account"), { method: "PUT", headers: { "Content-Type": "application/json", ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify(payload) });
         const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not update your account.");
         renderAccount(result.user);
@@ -638,13 +640,13 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
     });
     const logoutButton = $("#logout-button", applicationPanel);
     if (logoutButton) logoutButton.addEventListener("click", async () => {
-      try { const token = getToken(); if (token) await fetch("/api/auth/logout", { method: "POST", headers: { Authorization: `Bearer ${token}` } }); } catch {}
+      try { const token = getToken(); if (token) await fetch(api("/api/auth/logout"), { method: "POST", headers: { Authorization: `Bearer ${token}` } }); } catch {}
       clearToken(); renderAccount(null); toast("You have signed out.");
     });
     const restore = () => {
       const token = getToken();
       if (!token) { renderAccount(null); return; }
-      fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } }).then((response) => readJson(response)).then((result) => { if (result.ok && result.user) renderAccount(result.user); else { clearToken(); renderAccount(null); } }).catch(() => renderAccount(null));
+      fetch(api("/api/auth/me"), { headers: { Authorization: `Bearer ${token}` } }).then((response) => readJson(response)).then((result) => { if (result.ok && result.user) renderAccount(result.user); else { clearToken(); renderAccount(null); } }).catch(() => renderAccount(null));
     };
     restore();
   }

@@ -19,6 +19,10 @@ export const port = Number(process.env.PORT || 3000);
 export const mongoUri = process.env.MONGODB_URI;
 export const sheetsUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
 export const adminKey = (process.env.ADMIN_KEY || "").trim();
+export const corsOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const smtpReady = Boolean(
   process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.EMAIL_FROM
