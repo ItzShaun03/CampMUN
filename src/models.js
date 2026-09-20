@@ -82,7 +82,7 @@ const loginSchema = new mongoose.Schema({
    breach cannot be replayed to hijack sessions. The plaintext
    token lives solely with the browser. */
 const sessionSchema = new mongoose.Schema({
-  tokenHash: { type: String, required: true, unique: true },
+  tokenHash: { type: String, required: true, unique: true, sparse: true },
   kind: { type: String, enum: ["SchoolUser", "IndividualUser"], required: true },
   user: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: "kind" },
   createdAt: { type: Date, default: Date.now, expires: "30d" }
@@ -206,6 +206,10 @@ export const ensureRegistrationIndexes = async (names) => {
 };
 
 export const ensureCollections = async () => {
+  /* Sessions created before tokenHash existed carry only the old `token`
+     field. Their shared null tokenHash would abort the unique index build
+     (E11000 duplicate key), so clear them before the indexes are created. */
+  await Session.deleteMany({ tokenHash: { $in: [null, ""] } });
   await Promise.all([
     SchoolUser.init(),
     IndividualUser.init(),

@@ -17,10 +17,12 @@ export const connectionAttempt = mongoUri
       .then(async () => { await ensureCollections(); return true; })
       .catch((error) => {
         console.error("MongoDB connection failed:", error.message);
-        fetch("https://api.ipify.org")
-          .then((r) => r.text())
-          .then((ip) => console.error(`Your public IP is ${ip} — allow it in Atlas > Network Access > IP Access List, then restart.`))
-          .catch(() => {});
+        if (/tls|ssl|handshake|certificate|dns|socket|econnrefused|enotfound|serverselection|timeout|authentication/i.test(String(error?.message || ""))) {
+          fetch("https://api.ipify.org")
+            .then((r) => r.text())
+            .then((ip) => console.error(`Your public IP is ${ip} — allow it in Atlas > Network Access > IP Access List, then restart.`))
+            .catch(() => {});
+        }
         return false;
       })
   : Promise.resolve(false);
