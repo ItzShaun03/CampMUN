@@ -55,3 +55,20 @@ Fill the SMTP values in `.env`. For Gmail, use an App Password, never your norma
 ## Security included
 
 Credentials are kept in `.env`, never browser code. Accounts are split by type into `school_users` and `individual_users` collections, use bcrypt-hashed passwords and rotating random session tokens (30-day expiry). Users sign up as a School or Individual once and then log in to apply. The backend uses security headers, rate limits, server-side validation, a bot honeypot, unique email prevention, and does not expose candidate records publicly. Use HTTPS when deployed.
+
+### Deploy the pages on GitHub Pages
+
+The seven pages are static, so they can be hosted free on GitHub Pages
+while the Node server runs elsewhere (your computer, or a host like
+Render, Railway or Fly.io).
+
+1. Push the repo to GitHub and enable Pages (Settings → Pages → deploy
+   from the `main` branch root).
+2. Set `apiBase` in `site-config.js` to the URL of the running Node
+   server, e.g. `"https://campmun-api.example.com"` (or
+   `"http://localhost:3000"` while testing locally).
+3. Add the Pages origin to `CORS_ORIGIN` in the server's `.env`, e.g.
+   `CORS_ORIGIN=https://yourname.github.io`. Restart the server.
+4. Keep the Node server running — MongoDB, accounts, registrations,
+   uploads and exports all come from it. If it is down, the site shows
+   the "Account service is offline" message.

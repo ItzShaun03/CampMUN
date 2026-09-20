@@ -16,6 +16,12 @@
 */
 
 window.CAMPMUN_CONFIG = {
+  /* API endpoint for registrations and accounts. Leave "" when the Node
+     server serves the pages (npm start). When the pages run on a static
+     host such as GitHub Pages, point this at the running server, including
+     the port, e.g. "http://localhost:3000" — and add that page origin to
+     CORS_ORIGIN in the server's .env so the browser accepts the requests. */
+  apiBase: "",
   event: { edition: "01 / 2027", name: "The First CampMUN", dates: "20–21 February 2027", dayOne: "20", dayTwo: "21", month: "FEB", year: "2027", theme: "In an age of uncertainty, the courage to convene." },
   contact: { email: "campmun@campionschool.in", venue: "Campion School\nCooperage Road, Mumbai", instagram: "", linkedin: "" },
   committees: [
