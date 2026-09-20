@@ -1,0 +1,2 @@
+CampMUN portal running at http://localhost:3000
+Collections ensured: school_users, individual_users, sessions, logins, registration_individuals (+ one registration_school_* per school)

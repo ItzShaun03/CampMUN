@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Register for CampMUN at Campion School, Mumbai.">
+<title>Register | CampMUN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="noise"></div>
+<header class="topbar page-topbar">
+<a class="brand" href="index.html"><span class="brand-mark">C<span>∞</span>M</span><span class="brand-copy"><strong>CampMUN</strong><small>Campion School, Mumbai</small></span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span></button>
+<nav id="site-nav" class="site-nav">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="conference.html">Conference</a>
+<a href="resources.html">Resources</a>
+<a href="contact.html">Contact</a>
+<a class="nav-cta active" href="register.html">Register <span>↗</span></a>
+</nav>
+</header>
+<main>
+<section class="register-page section-pad">
+<div class="register-head reveal">
+<div class="section-label">04 / REGISTRATION</div>
+<h1 class="display">Create your <em>account.</em></h1>
+<p>Register as a <strong>School</strong> or an <strong>individual delegate</strong>. Your account unlocks the application form and follows your registration with the Secretariat.</p>
+</div>
+<div class="registration-shell reveal">
+
+<div class="registration-main">
+
+<section id="auth-panel" class="auth-panel">
+<div class="auth-tabs" role="tablist" aria-label="Account actions">
+<button type="button" class="auth-tab is-active" role="tab" aria-selected="true" data-mode="signup">Create account</button>
+<button type="button" class="auth-tab" role="tab" aria-selected="false" data-mode="login">Log in</button>
+</div>
+
+<form id="signup-form" class="auth-form" novalidate>
+<div class="auth-kinds" role="radiogroup" aria-label="Account type">
+<label class="auth-kind is-selected">
+<input type="radio" name="accountType" value="school" checked>
+<span class="auth-kind-mark" aria-hidden="true"></span>
+<span class="auth-kind-copy"><b>School</b><small>Register as a delegation</small></span>
+</label>
+<label class="auth-kind">
+<input type="radio" name="accountType" value="individual">
+<span class="auth-kind-mark" aria-hidden="true"></span>
+<span class="auth-kind-copy"><b>Individual</b><small>Register on your own</small></span>
+</label>
+</div>
+
+<fieldset class="signup-fields" id="signup-school-fields">
+<div class="auth-section">School delegation details</div>
+<div class="field">
+<label for="su-s-first">First name</label>
+<input id="su-s-first" name="firstName" autocomplete="given-name" placeholder="First name" required>
+</div>
+<div class="field">
+<label for="su-s-last">Last name</label>
+<input id="su-s-last" name="lastName" autocomplete="family-name" placeholder="Last name" required>
+</div>
+<div class="field">
+<label for="su-s-email">Email address</label>
+<input id="su-s-email" name="email" type="email" autocomplete="email" placeholder="Email" required>
+</div>
+<div class="field">
+<label for="su-s-school">School / Institution Name</label>
+<input id="su-s-school" name="school" autocomplete="organization" placeholder="Full institution name" required>
+</div>
+<div class="field">
+<label for="su-s-city">City</label>
+<input id="su-s-city" name="city" autocomplete="address-level2" placeholder="City" required>
+</div>
+<div class="field">
+<label for="su-s-country">Country</label>
+<input id="su-s-country" name="country" autocomplete="country-name" placeholder="Country" required>
+</div>
+<div class="field">
+<label for="su-s-phone">Phone Number</label>
+<input id="su-s-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91…" required>
+</div>
+<div class="field">
+<label for="su-s-delegates">Number of Delegates</label>
+<input id="su-s-delegates" name="delegates" type="number" min="1" placeholder="e.g. 10" required>
+</div>
+<div class="field">
+<label for="su-s-faculty">Number of Faculty</label>
+<input id="su-s-faculty" name="faculty" type="number" min="0" placeholder="e.g. 2" required>
+</div>
+<div class="auth-section">Teacher / Faculty Contact</div>
+<div class="field">
+<label for="su-s-teacher-name">Name</label>
+<input id="su-s-teacher-name" name="teacherName" autocomplete="name" placeholder="Teacher / faculty name" required>
+</div>
+<div class="field">
+<label for="su-s-teacher-mobile">Mobile</label>
+<input id="su-s-teacher-mobile" name="teacherMobile" type="tel" inputmode="tel" placeholder="+91…" required>
+</div>
+<div class="field">
+<label for="su-s-teacher-email">Email</label>
+<input id="su-s-teacher-email" name="teacherEmail" type="email" placeholder="Email" required>
+</div>
+<div class="field field-full field-pass">
+<label for="su-s-password">Password</label>
+<input id="su-s-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+<button class="pw-toggle" type="button" aria-pressed="false" data-password-toggle="su-s-password">Show</button>
+</div>
+</fieldset>
+
+<fieldset class="signup-fields" id="signup-individual-fields" disabled>
+<div class="auth-section">Individual delegate details</div>
+<div class="field">
+<label for="su-i-first">First name</label>
+<input id="su-i-first" name="firstName" autocomplete="given-name" placeholder="First name" required>
+</div>
+<div class="field">
+<label for="su-i-last">Last name</label>
+<input id="su-i-last" name="lastName" autocomplete="family-name" placeholder="Last name" required>
+</div>
+<div class="field">
+<label for="su-i-email">Email</label>
+<input id="su-i-email" name="email" type="email" autocomplete="email" placeholder="Email" required>
+</div>
+<div class="field">
+<label for="su-i-phone">Phone Number</label>
+<input id="su-i-phone" name="phone" type="tel" inputmode="tel" placeholder="+91…" required>
+</div>
+<div class="field">
+<label for="su-i-grade">Grade / Class</label>
+<select id="su-i-grade" name="grade" required>
+<option value="" selected disabled>Select Grade</option>
+<option>Grade 5</option>
+<option>Grade 6</option>
+<option>Grade 7</option>
+<option>Grade 8</option>
+<option>Grade 9</option>
+<option>Grade 10</option>
+<option>Grade 11</option>
+<option>Grade 12</option>
+<option>University / College</option>
+</select>
+</div>
+<div class="field">
+<label for="su-i-school">School Name</label>
+<input id="su-i-school" name="school" autocomplete="organization" placeholder="Which school do you attend?" required>
+</div>
+<div class="field">
+<label for="su-i-city">City</label>
+<input id="su-i-city" name="city" autocomplete="address-level2" placeholder="City" required>
+</div>
+<div class="field">
+<label for="su-i-country">Country</label>
+<input id="su-i-country" name="country" autocomplete="country-name" placeholder="Country" required>
+</div>
+<div class="field field-full">
+<label for="su-i-committee">Committee &amp; Allocation Preferences</label>
+<textarea id="su-i-committee" name="committeePreferences" placeholder="Which committees and/or countries would you prefer? Any specific preferences?" required></textarea>
+</div>
+<div class="field field-full">
+<label for="su-i-why-individual">Why are you not registering through your school? Why is your school not sending a delegation?</label>
+<textarea id="su-i-why-individual" name="whyIndividual" placeholder="Please explain why you are registering individually rather than through your school..." required></textarea>
+</div>
+<div class="field field-full">
+<label for="su-i-why-accepted">Why do you think you should be accepted to attend CMUN?</label>
+<textarea id="su-i-why-accepted" name="whyAccepted" placeholder="Explain your motivation, what you hope to gain, and why you would be a good fit..." required></textarea>
+</div>
+<div class="field field-full">
+<label for="su-i-experience">Past MUN / Public Speaking Experience &amp; Awards</label>
+<textarea id="su-i-experience" name="experience" placeholder="Provide a comprehensive list of all relevant experience, conferences attended, awards received..." required></textarea>
+</div>
+<div class="field field-full field-pass">
+<label for="su-i-password">Password</label>
+<input id="su-i-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+<button class="pw-toggle" type="button" aria-pressed="false" data-password-toggle="su-i-password">Show</button>
+</div>
+</fieldset>
+
+<label class="consent">
+<input id="signup-consent" name="consent" type="checkbox" required>
+<span>I consent to CampMUN using my information for account administration and application communication.</span>
+</label>
+<div class="auth-error" id="auth-error" role="status" aria-live="polite" hidden></div>
+<button class="button button-primary auth-submit" id="signup-submit" type="submit">Create account <span>→</span></button>
+<p class="auth-alt">Already have an account? <button type="button" data-mode="login">Log in</button></p>
+<p class="form-note field-full">One account per email. Your password is encrypted before it is stored.</p>
+</form>
+
+<form id="login-form" class="auth-form" hidden novalidate>
+<div class="field">
+<label for="login-email">Email address</label>
+<input id="login-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+</div>
+<div class="field field-pass">
+<label for="login-password">Password</label>
+<input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+<button class="pw-toggle" type="button" aria-pressed="false" data-password-toggle="login-password">Show</button>
+</div>
+<div class="auth-error" id="login-error" role="status" aria-live="polite" hidden></div>
+<button class="button button-primary auth-submit" id="login-submit" type="submit">Log in <span>→</span></button>
+<p class="auth-alt">No account yet? <button type="button" data-mode="signup">Create one</button></p>
+<p class="form-note field-full">Trouble signing in? Contact the Secretariat at campmun@campionschool.in.</p>
+</form>
+</section>
+
+<section id="application-panel" class="application-panel" hidden>
+<div class="applicant-bar">
+<div class="applicant-copy"><span>Signed in as</span><b id="applicant-name"></b><small id="applicant-email"></small></div>
+<div class="applicant-actions">
+<button class="button-ghost" id="settings-button" type="button">Account settings</button>
+<button class="button-ghost" id="logout-button" type="button">Sign out</button>
+</div>
+</div>
+
+<section id="account-settings" class="account-settings" hidden>
+<div class="settings-head">
+<span class="section-label">ACCOUNT</span>
+<h2>Account <em>settings.</em></h2>
+<p>Update your name, login email, password, or delegation size.</p>
+</div>
+<form id="settings-form" class="registration-form multi-step-form" novalidate>
+<section class="form-step">
+<input class="honeypot" name="campmun_hp" tabindex="-1" autocomplete="off" aria-hidden="true" data-lpignore="true" data-1p-ignore data-form-type="other">
+<div class="field">
+<label for="settings-first">First name</label>
+<input id="settings-first" name="firstName" autocomplete="given-name" required>
+</div>
+<div class="field">
+<label for="settings-last">Last name</label>
+<input id="settings-last" name="lastName" autocomplete="family-name" required>
+</div>
+<div class="field field-full">
+<label for="settings-email">Login email</label>
+<input id="settings-email" name="email" type="email" autocomplete="email" required>
+</div>
+<div class="field settings-school-field">
+<label for="settings-delegates">Number of delegates</label>
+<input id="settings-delegates" name="numDelegates" type="number" min="1" required>
+</div>
+<div class="field settings-school-field">
+<label for="settings-faculty">Number of faculty</label>
+<input id="settings-faculty" name="numFaculty" type="number" min="0" required>
+</div>
+<div class="field field-full field-pass">
+<label for="settings-current">Current password</label>
+<input id="settings-current" name="currentPassword" type="password" autocomplete="current-password" placeholder="Required to save changes" required>
+<button class="pw-toggle" type="button" aria-pressed="false" data-password-toggle="settings-current">Show</button>
+</div>
+<div class="field field-full field-pass">
+<label for="settings-new">New password <small>(optional)</small></label>
+<input id="settings-new" name="newPassword" type="password" autocomplete="new-password" placeholder="Leave blank to keep your current password">
+<button class="pw-toggle" type="button" aria-pressed="false" data-password-toggle="settings-new">Show</button>
+</div>
+<div class="form-error" id="settings-error" role="status" aria-live="polite" hidden></div>
+<div class="step-actions">
+<button class="button-ghost" id="settings-back" type="button">Back to registration</button>
+<button class="button button-primary submit-button" id="settings-save" type="submit">Save changes <span>→</span></button>
+</div>
+<p class="form-note field-full">Changing your email or password signs you out of other devices.</p>
+</section>
+</form>
+</section>
+
+<div class="delegate-progress" id="delegate-progress" hidden>
+<span id="delegate-progress-text"></span>
+<i><b id="delegate-progress-fill"></b></i>
+</div>
+
+<div class="delegate-progress" id="faculty-progress" hidden>
+<span id="faculty-progress-text"></span>
+<i><b id="faculty-progress-fill"></b></i>
+</div>
+
+<div id="submitted-list" class="submitted-list" hidden></div>
+
+<div id="registration-forms" class="registration-forms"></div>
+
+<div class="form-success" id="form-success" hidden>
+<span id="success-eyebrow">REGISTRATION RECEIVED</span>
+<h2>Thank you, <em id="success-name">delegate</em>.</h2>
+<p id="success-copy">Your registration is now with the CampMUN Secretariat. Keep your reference number for correspondence.</p>
+<b id="application-id"></b>
+<div class="application-review" id="success-details"></div>
+<div class="success-actions">
+<button class="button-ghost" id="success-edit" type="button">Edit this application</button>
+<button class="button button-primary" id="success-next" type="button" hidden>Register another member <span>→</span></button>
+</div>
+</div>
+
+<div class="application-done" id="application-done" hidden>
+<span id="done-eyebrow">ALL DELEGATES REGISTERED</span>
+<h2 id="done-heading">Your delegation is <em>complete.</em></h2>
+<p id="done-copy">Every seat has been submitted. Use the list below to review or edit any application.</p>
+<div id="done-list" class="done-list"></div>
+</div>
+</section>
+
+</div>
+
+<aside class="registration-aside">
+<div class="mini-figure"><i></i><i></i><i></i></div>
+<span class="side-number">SECURE</span>
+<h3>Your details, protected.</h3>
+<p>Passwords are encrypted, and your application is stored safely by the CampMUN Secretariat.</p>
+<span class="side-number">SIMPLE</span>
+<h3>One account gate.</h3>
+<p>Sign up once as a School or an Individual, then apply with your details already in place.</p>
+<span class="side-number">NEXT</span>
+<h3>Confirmation.</h3>
+<p>Watch your inbox for your registration acknowledgement and follow-up.</p>
+</aside>
+
+</div>
+</section>
+</main>
+<footer>
+<a class="brand" href="index.html"><span class="brand-mark">C<span>∞</span>M</span><span class="brand-copy"><strong>CampMUN</strong><small>Campion School, Mumbai</small></span></a>
+<p>© <span id="current-year"></span> CampMUN.</p>
+<a href="contact.html">Need help? Contact us ↗</a>
+</footer>
+<div id="toast" class="toast"></div>
+<script src="features.js"></script>
+<script src="site-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

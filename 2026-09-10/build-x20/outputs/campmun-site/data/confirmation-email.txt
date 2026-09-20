@@ -1,0 +1,11 @@
+Dear {{name}},
+
+Thank you for registering your interest in CampMUN.
+
+We have received your application for {{committee}} as a {{role}}. Your application reference is {{applicationId}}.
+
+The CampMUN Secretariat will review your application and contact you with the next steps.
+
+Warm regards,
+CampMUN Secretariat
+Campion School, Mumbai
