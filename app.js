@@ -31,6 +31,24 @@
   const features = window.CAMPMUN_FEATURES || {};
   const featureOn = (name) => features[name] !== false;
 
+  /* Read an API response safely. Static hosts (e.g. GitHub Pages)
+     answer /api/* with an HTML 404 page, which response.json() would
+     fail on with a cryptic "Unexpected token <" error. Converting that
+     into a TypeError lets every catch block show its clear
+     "service is offline" message instead. */
+  const readJson = async (response) => {
+    const text = await response.text();
+    const trimmed = text.trimStart();
+    if (!trimmed || (trimmed[0] !== "{" && trimmed[0] !== "[")) {
+      throw new TypeError("The server returned an unexpected response. Please start the CampMUN Node server and try again.");
+    }
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      throw new TypeError("The server returned an unexpected response. Please start the CampMUN Node server and try again.");
+    }
+  };
+
   /* ------------------------------------------------------------
      1) FEATURE-FLAG VISIBILITY
      Respects features.js: hides the Manage/Register links when a
@@ -78,7 +96,7 @@
     if (featureOn("resources")) {
       (async () => {
         let documents = [];
-        try { const response = await fetch("/api/content"); const data = await response.json(); if (response.ok && data.ok) documents = data.documents || []; } catch {}
+        try { const response = await fetch("/api/content"); const data = await readJson(response); if (response.ok && data.ok) documents = data.documents || []; } catch {}
         documents.forEach((href) => {
           const name = href.split("/").pop().replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
           const card = document.createElement("a");
@@ -107,7 +125,7 @@
     const captions = config.gallery || [];
     (async () => {
       let images = [];
-      try { const response = await fetch("/api/content"); const data = await response.json(); if (response.ok && data.ok) images = data.images || []; } catch {}
+      try { const response = await fetch("/api/content"); const data = await readJson(response); if (response.ok && data.ok) images = data.images || []; } catch {}
       const slots = Array.from({ length: Math.max(captions.length, images.length, 6) }, (_, index) => ({ title: captions[index]?.title || "CampMUN", caption: captions[index]?.caption || "A moment from the conference." }));
       const blocks = [];
       slots.forEach((item, index) => {
@@ -286,7 +304,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(lockedSch
         if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = "Sending application…"; }
         try {
           const response = await fetch("/api/registrations", { method: "POST", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
-          const result = await response.json();
+          const result = await readJson(response);
           if (!response.ok || !result.ok) throw new Error(result.message || "We could not send the application.");
           await loadState();
           const saved = registrations.find((reg) => reg.applicationId === result.applicationId);
@@ -390,7 +408,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(lockedSch
         const appId = badge.getAttribute("data-application");
         if (!appId) return;
         fetch(`/api/registrations/${encodeURIComponent(appId)}/verify`, { headers: { Authorization: `Bearer ${getToken()}` } })
-          .then((response) => response.json())
+          .then((response) => readJson(response))
           .then((data) => {
             if (!data || data.ok !== true) throw new Error();
             const verified = data.verified === true;
@@ -496,7 +514,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
         if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = "Saving changes…"; }
         try {
           const response = await fetch(`/api/registrations/${encodeURIComponent(reg.applicationId)}`, { method: "PUT", headers: { "Content-Type": "application/json", ...(account ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify({ name, email, school, role, committee, consent: true }) });
-          const result = await response.json();
+          const result = await readJson(response);
           if (!response.ok || !result.ok) throw new Error(result.message || "We could not update the application.");
           await loadState();
           toast("Application updated.");
@@ -516,7 +534,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       if (!account || !featureOn("auth")) { delegateTotal = 1; facultyTotal = 0; registrations = []; return; }
       try {
         const response = await fetch("/api/registrations/mine", { headers: { Authorization: `Bearer ${getToken()}` } });
-        const data = await response.json();
+        const data = await readJson(response);
         if (response.ok && data.ok) { delegateTotal = data.delegateTotal || 1; facultyTotal = data.facultyTotal || 0; registrations = data.registrations || []; }
       } catch {}
     };
@@ -564,7 +582,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       const submit = $("#signup-submit", authPanel); submit.disabled = true; submit.innerHTML = "Creating account…";
       try {
         const response = await fetch("/api/auth/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-        const result = await response.json();
+        const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not create your account.");
         setToken(result.token); renderAccount(result.user); toast("Account created. Welcome to CampMUN.");
       } catch (error) { showAuthError("#auth-error", error instanceof TypeError ? "Account service is offline. Please start the CampMUN Node server and try again." : (error.message || "We could not create your account.")); }
@@ -577,7 +595,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       const submit = $("#login-submit", authPanel); submit.disabled = true; submit.innerHTML = "Logging in…";
       try {
         const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: $("#login-email", authPanel).value, password: $("#login-password", authPanel).value }) });
-        const result = await response.json();
+        const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not log you in.");
         setToken(result.token); renderAccount(result.user); toast(`Welcome back, ${result.user.name.split(" ")[0]}.`);
       } catch (error) { showAuthError("#login-error", error instanceof TypeError ? "Account service is offline. Please start the CampMUN Node server and try again." : (error.message || "We could not log you in.")); }
@@ -607,7 +625,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
       const submit = $("#settings-save", applicationPanel); if (submit) { submit.disabled = true; submit.innerHTML = "Saving…"; }
       try {
         const response = await fetch("/api/auth/account", { method: "PUT", headers: { "Content-Type": "application/json", ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) }, body: JSON.stringify(payload) });
-        const result = await response.json();
+        const result = await readJson(response);
         if (!response.ok || !result.ok) throw new Error(result.message || "We could not update your account.");
         renderAccount(result.user);
         toast("Account details updated.");
@@ -626,7 +644,7 @@ ${hasAccount ? `<input type="hidden" name="school" value="${escapeHtml(account.s
     const restore = () => {
       const token = getToken();
       if (!token) { renderAccount(null); return; }
-      fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } }).then((response) => response.json()).then((result) => { if (result.ok && result.user) renderAccount(result.user); else { clearToken(); renderAccount(null); } }).catch(() => renderAccount(null));
+      fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } }).then((response) => readJson(response)).then((result) => { if (result.ok && result.user) renderAccount(result.user); else { clearToken(); renderAccount(null); } }).catch(() => renderAccount(null));
     };
     restore();
   }
